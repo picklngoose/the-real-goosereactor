@@ -68,6 +68,9 @@ async def get_or_create_emoji(guild: discord.Guild, emoji_name: str) -> discord.
 @bot.event
 async def on_ready():
     print(f"✅ Bot is ready. Logged in as {bot.user}")
+    print(f"🔗 Connected to {len(bot.guilds)} server(s):")
+    for guild in bot.guilds:
+        print(f" - {guild.name} (ID: {guild.id})")
 
 @bot.event
 async def on_message(message):
