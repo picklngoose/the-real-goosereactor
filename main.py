@@ -80,7 +80,6 @@ async def on_message(message):
             emoji = await get_or_create_emoji(message.guild, emoji_name)
             if emoji:
                 await message.add_reaction(emoji)
-            break  # React with only one emoji per message
 
     if "goose" in content:
         await message.channel.send("HONK")
