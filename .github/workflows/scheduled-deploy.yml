@@ -3,7 +3,7 @@ name: Scheduled Railway Deploy
 on:
   schedule:
     # Runs every day at 18:00 UTC (edit as needed)
-    - cron: '0 18 * * *'
+    - cron: '0 2-6 * * *'
 
 jobs:
   deploy:
