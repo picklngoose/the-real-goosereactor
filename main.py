@@ -95,6 +95,21 @@ async def on_message(message):
     if "llama" in content:
         await message.channel.send("?")
 
+    if "turtle" in content:
+        await message.channel.send("?")
+
+    if "dog" in content:
+        await message.channel.send("?")
+
+    if "buke" in content:
+        await message.channel.send("!")
+
+    if "cyber" in content:
+        await message.channel.send("!")
+
+    if "sniper" in content:
+        await message.channel.send("!")
+
     await bot.process_commands(message)
 
 # === Run Server and Bot ===
