@@ -25,12 +25,14 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-TRIGGER_WORDS = {"goose", "bad", "kill", "run", "die", "honk", "hi"}
+TRIGGER_WORDS = {"goose", "bad", "kill", "run", "die", "honk", "hi", "sigma", "pickln", "potato", "cat"}
 
 # Map specific trigger words to emoji names
 WORD_EMOJI_MAP = {
     "kill": "duck_killer",
-    "bad": "goose_aggressive"
+    "bad": "goose_aggressive",
+    "die": "duck_killer",
+    "run": "duck_aggressive"
 }
 DEFAULT_EMOJI_NAME = "goosealert"
 
@@ -89,6 +91,9 @@ async def on_message(message):
 
     if "geese" in content:
         await message.channel.send("honk?")
+
+    if "llama" in content:
+        await message.channel.send("?")
 
     await bot.process_commands(message)
 
