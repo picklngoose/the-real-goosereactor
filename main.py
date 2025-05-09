@@ -84,6 +84,12 @@ async def on_message(message):
     if "goose" in content:
         await message.channel.send("HONK")
 
+    if "moose" in content:
+        await message.channel.send("HISS")
+
+    if "geese" in content:
+        await message.channel.send("honk?")
+
     await bot.process_commands(message)
 
 # === Run Server and Bot ===
