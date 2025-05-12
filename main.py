@@ -2,6 +2,7 @@ import os
 import discord
 from discord.ext import commands
 import aiohttp
+from discord import app_commands
 
 # === Discord Bot Setup ===
 intents = discord.Intents.default()
