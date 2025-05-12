@@ -163,7 +163,7 @@ async def on_message(message):
 async def goose_fact(interaction: discord.Interaction):
     import random
 
-      facts = [
+    facts = [
         "Geese fly in a V to conserve energy.",
         "Geese mate for life 💘.",
         "A group of geese on land is called a gaggle.",
