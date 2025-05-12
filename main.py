@@ -100,6 +100,14 @@ async def on_ready():
     for guild in bot.guilds:
         print(f" - {guild.name} (ID: {guild.id})")
 
+    commands = await bot.tree.fetch_commands()
+    for cmd in commands:
+        if cmd.name == "goose":
+            await bot.tree.remove_command(cmd.name, type=discord.AppCommandType.chat_input)
+            print(f"❌ Removed slash command: /{cmd.name}")
+
+    await bot.tree.sync()
+
 @bot.event
 async def on_message(message):
     if message.author.bot:
