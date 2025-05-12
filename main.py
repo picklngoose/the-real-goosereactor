@@ -60,13 +60,17 @@ async def on_ready():
 async def on_message(message):
     if message.author.bot:
         return
-  
-yes_no_starters = ("is", "are", "do", "does", "did", "will", "would", "can", "could", "should", "shall", "am", "was", "were", "have", "has", "had")
+
+    # Respond to yes/no questions
+    yes_no_starters = (
+        "is", "are", "do", "does", "did", "will", "would", "can", "could",
+        "should", "shall", "am", "was", "were", "have", "has", "had"
+    )
     if message.content.lower().startswith(yes_no_starters) and message.content.endswith("?"):
         await message.channel.send("https://tenor.com/view/no-nope-denied-goose-gif-25891503")
         return
-    
-content = message.content.lower()
+
+    content = message.content.lower()
 
     for word in TRIGGER_WORDS:
         if word in content:
