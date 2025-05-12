@@ -20,7 +20,7 @@ WORD_EMOJI_MAP = {
 }
 DEFAULT_EMOJI_NAME = "goosealert"
 
-# Emoji image URLs (replace with your own if needed)
+# Emoji image URLs
 EMOJI_IMAGES = {
     "goosealert": "https://cdn.discordapp.com/emojis/1337164459541790783.png",
     "duck_killer": "https://cdn.discordapp.com/emojis/1337164615443939430.png",
@@ -28,17 +28,14 @@ EMOJI_IMAGES = {
 }
 
 async def get_or_create_emoji(guild: discord.Guild, emoji_name: str) -> discord.Emoji | None:
-    # Check if emoji already exists
     for emoji in guild.emojis:
         if emoji.name == emoji_name:
             return emoji
 
-    # Get emoji image URL
     url = EMOJI_IMAGES.get(emoji_name)
     if not url:
         return None
 
-    # Try downloading the image and creating the emoji
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
@@ -61,17 +58,18 @@ async def on_message(message):
     if message.author.bot:
         return
 
+    content = message.content.lower()
+
     # Respond to yes/no questions
     yes_no_starters = (
         "is", "are", "do", "does", "did", "will", "would", "can", "could",
         "should", "shall", "am", "was", "were", "have", "has", "had"
     )
-    if message.content.lower().startswith(yes_no_starters) and message.content.endswith("?"):
+    if content.startswith(yes_no_starters) and content.endswith("?"):
         await message.channel.send("https://tenor.com/view/no-nope-denied-goose-gif-25891503")
         return
 
-    content = message.content.lower()
-
+    # React to trigger words
     for word in TRIGGER_WORDS:
         if word in content:
             emoji_name = WORD_EMOJI_MAP.get(word, DEFAULT_EMOJI_NAME)
@@ -79,38 +77,27 @@ async def on_message(message):
             if emoji:
                 await message.add_reaction(emoji)
 
+    # Specific content responses
     if "goose" in content:
         await message.channel.send("HONK")
-
     if "moose" in content:
         await message.channel.send("HISS")
-
     if "geese" in content:
         await message.channel.send("honk?")
-
     if "llama" in content:
         await message.channel.send("?")
-
     if "turtle" in content:
         await message.channel.send("?")
-
     if "dog" in content:
         await message.channel.send("?")
-
     if "buke" in content:
         await message.channel.send("!")
-
     if "cyber" in content:
         await message.channel.send("!")
-
     if "sniper" in content:
         await message.channel.send("!")
-
     if "kill the goose" in content:
         await message.channel.send("https://tenor.com/view/goose-attack-gif-26985079")
-
-      if "?" in content:
-        await message.channel.send("
 
     await bot.process_commands(message)
 
