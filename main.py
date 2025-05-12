@@ -94,6 +94,29 @@ async def get_or_create_emoji(guild: discord.Guild, emoji_name: str) -> discord.
         print(f"❌ Failed to create emoji '{emoji_name}': {e}")
     return None
 
+import random
+
+@bot.tree.command(name="goosefact", description="Learn a fun goose fact.")
+async def goose_fact(interaction: discord.Interaction):
+    facts = [
+        "Geese fly in a V to conserve energy.",
+        "Geese mate for life 💘.",
+        "A group of geese on land is called a gaggle.",
+        "Geese are very protective parents.",
+        "Geese have excellent eyesight!",
+        "Geese can remember people — friend or foe!",
+        "Some geese can fly over 5,000 miles during migration!",
+        "The Canada goose is one of the most widespread species in North America.",
+        "Baby geese are called goslings 🐣.",
+        "Geese can live 10–25 years in the wild.",
+        "Geese honk to communicate while flying to keep the group together.",
+        "Geese can be trained — they’re very smart animals!",
+        "In Ancient Egypt, geese were considered sacred animals.",
+        "Some geese have been known to guard homes like dogs 🏠.",
+        "Geese form strong social bonds and mourn when one dies."
+    ]
+    await interaction.response.send_message("🪶 " + random.choice(facts))
+    
 @bot.event
 async def on_ready():
     print(f"✅ Bot is ready. Logged in as {bot.user}")
@@ -101,14 +124,20 @@ async def on_ready():
     for guild in bot.guilds:
         print(f" - {guild.name} (ID: {guild.id})")
 
-    commands = await bot.tree.fetch_commands()
-    for cmd in commands:
-        if cmd.name == "goose":
-            await bot.tree.remove_command(cmd.name, type=discord.AppCommandType.chat_input)
-            print(f"❌ Removed slash command: /{cmd.name}")
+    try:
+        # Optionally remove old slash command if needed
+        commands = await bot.tree.fetch_commands()
+        for cmd in commands:
+            if cmd.name == "goose":
+                await bot.tree.remove_command(cmd.name, type=discord.AppCommandType.chat_input)
+                print(f"❌ Removed slash command: /{cmd.name}")
 
-    await bot.tree.sync()
-
+        # Sync your new slash commands like /goosefact
+        synced = await bot.tree.sync()
+        print(f"🔄 Synced {len(synced)} slash commands.")
+    except Exception as e:
+        print(f"❌ Error syncing slash commands: {e}")
+        
 @bot.event
 async def on_message(message):
     if message.author.bot:
@@ -158,28 +187,5 @@ async def on_message(message):
         await message.channel.send("https://tenor.com/view/goose-gif-14930335269575530990")
 
     await bot.process_commands(message)
-
-@bot.tree.command(name="goosefact", description="Learn a fun goose fact.")
-async def goose_fact(interaction: discord.Interaction):
-    import random
-
-    facts = [
-        "Geese fly in a V to conserve energy.",
-        "Geese mate for life 💘.",
-        "A group of geese on land is called a gaggle.",
-        "Geese are very protective parents.",
-        "Geese have excellent eyesight!",
-        "Geese can remember people — friend or foe!",
-        "Some geese can fly over 5,000 miles during migration!",
-        "The Canada goose is one of the most widespread species in North America.",
-        "Baby geese are called goslings 🐣.",
-        "Geese can live 10–25 years in the wild.",
-        "Geese honk to communicate while flying to keep the group together.",
-        "Geese can be trained — they’re very smart animals!",
-        "In Ancient Egypt, geese were considered sacred animals.",
-        "Some geese have been known to guard homes like dogs 🏠.",
-        "Geese form strong social bonds and mourn when one dies."
-    ]
-    await interaction.response.send_message("🪶 " + random.choice(facts))
 
 bot.run(os.environ["DISCORD_BOT_TOKEN"])
