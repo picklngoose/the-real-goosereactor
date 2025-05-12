@@ -1,23 +1,7 @@
 import os
 import discord
 from discord.ext import commands
-from flask import Flask
-from threading import Thread
 import aiohttp
-
-# === Web Server Setup ===
-app = Flask('')
-
-@app.route('/')
-def home():
-    return "Goose reactor is alive!"
-
-def run_web_server():
-    app.run(host='0.0.0.0', port=8080)
-
-def keep_alive():
-    t = Thread(target=run_web_server)
-    t.start()
 
 # === Discord Bot Setup ===
 intents = discord.Intents.default()
@@ -115,6 +99,4 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
-# === Run Server and Bot ===
-keep_alive()
 bot.run(os.environ["DISCORD_BOT_TOKEN"])
