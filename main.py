@@ -99,7 +99,7 @@ async def on_message(message):
     if "kill the goose" in content:
         await message.channel.send("https://tenor.com/view/goose-attack-gif-26985079")
     if "cat" in content and "goose" in content:
-    await message.channel.send("https://tenor.com/view/goose-gif-14930335269575530990")
+        await message.channel.send("https://tenor.com/view/goose-gif-14930335269575530990")
 
     await bot.process_commands(message)
 
