@@ -159,4 +159,27 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+@bot.tree.command(name="goosefact", description="Learn a fun goose fact.")
+async def goose_fact(interaction: discord.Interaction):
+    import random
+
+      facts = [
+        "Geese fly in a V to conserve energy.",
+        "Geese mate for life 💘.",
+        "A group of geese on land is called a gaggle.",
+        "Geese are very protective parents.",
+        "Geese have excellent eyesight!",
+        "Geese can remember people — friend or foe!",
+        "Some geese can fly over 5,000 miles during migration!",
+        "The Canada goose is one of the most widespread species in North America.",
+        "Baby geese are called goslings 🐣.",
+        "Geese can live 10–25 years in the wild.",
+        "Geese honk to communicate while flying to keep the group together.",
+        "Geese can be trained — they’re very smart animals!",
+        "In Ancient Egypt, geese were considered sacred animals.",
+        "Some geese have been known to guard homes like dogs 🏠.",
+        "Geese form strong social bonds and mourn when one dies."
+    ]
+    await interaction.response.send_message("🪶 " + random.choice(facts))
+
 bot.run(os.environ["DISCORD_BOT_TOKEN"])
