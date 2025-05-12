@@ -97,6 +97,9 @@ async def on_message(message):
     if "sniper" in content:
         await message.channel.send("!")
 
+    if "kill the goose" in content:
+        await message.channel.send("https://tenor.com/view/goose-attack-gif-26985079")
+
     await bot.process_commands(message)
 
 bot.run(os.environ["DISCORD_BOT_TOKEN"])
