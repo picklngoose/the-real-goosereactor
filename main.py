@@ -9,6 +9,53 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
+@bot.command(name="help", help="Shows a list of trigger words and their effects.")
+async def custom_help(ctx):
+    embed = discord.Embed(
+        title="🪶 Goose Bot Help",
+        description="This bot reacts to certain words and phrases. Here's what it can do:",
+        color=discord.Color.orange()
+    )
+
+    # Emoji reactions
+    embed.add_field(
+        name="🔁 Emoji Reactions",
+        value=(
+            "**goose** → :goosealert:\n"
+            "**bad** → :goose_aggressive:\n"
+            "**kill** → :duck_killer:\n"
+            "**run** → :duck_aggressive:\n"
+            "**die** → :duck_killer:\n"
+            "**honk**, **hi**, **sigma**, **pickln**, **potato**, **cat** → :goosealert:"
+        ),
+        inline=False
+    )
+
+    # Custom message replies
+    embed.add_field(
+        name="💬 Message Replies",
+        value=(
+            "**goose** → HONK\n"
+            "**moose** → HISS\n"
+            "**geese** → honk?\n"
+            "**llama**, **turtle**, **dog** → ?\n"
+            "**buke**, **cyber**, **sniper** → !\n"
+            "**kill the goose** → [Goose Attack GIF](https://tenor.com/view/goose-attack-gif-26985079)\n"
+            "**cat** + **goose** in same message → [Goose vs Cat GIF](https://tenor.com/view/goose-gif-14930335269575530990)"
+        ),
+        inline=False
+    )
+
+    # Question detector
+    embed.add_field(
+        name="❓ Yes/No Questions",
+        value="Goose replies with an answer",
+        inline=False
+    )
+
+    embed.set_footer(text="Trigger words are case-insensitive.")
+    await ctx.send(embed=embed)
+    
 TRIGGER_WORDS = {"goose", "bad", "kill", "run", "die", "honk", "hi", "sigma", "pickln", "potato", "cat"}
 
 # Map specific trigger words to emoji names
@@ -102,52 +149,5 @@ async def on_message(message):
         await message.channel.send("https://tenor.com/view/goose-gif-14930335269575530990")
 
     await bot.process_commands(message)
-
-@bot.command(name="help", help="Shows a list of trigger words and their effects.")
-async def custom_help(ctx):
-    embed = discord.Embed(
-        title="🪶 Goose Bot Help",
-        description="This bot reacts to certain words and phrases. Here's what it can do:",
-        color=discord.Color.orange()
-    )
-
-    # Emoji reactions
-    embed.add_field(
-        name="🔁 Emoji Reactions",
-        value=(
-            "**goose** → :goosealert:\n"
-            "**bad** → :goose_aggressive:\n"
-            "**kill** → :duck_killer:\n"
-            "**run** → :duck_aggressive:\n"
-            "**die** → :duck_killer:\n"
-            "**honk**, **hi**, **sigma**, **pickln**, **potato**, **cat** → :goosealert:"
-        ),
-        inline=False
-    )
-
-    # Custom message replies
-    embed.add_field(
-        name="💬 Message Replies",
-        value=(
-            "**goose** → HONK\n"
-            "**moose** → HISS\n"
-            "**geese** → honk?\n"
-            "**llama**, **turtle**, **dog** → ?\n"
-            "**buke**, **cyber**, **sniper** → !\n"
-            "**kill the goose** → [Goose Attack GIF](https://tenor.com/view/goose-attack-gif-26985079)\n"
-            "**cat** + **goose** in same message → [Goose vs Cat GIF](https://tenor.com/view/goose-gif-14930335269575530990)"
-        ),
-        inline=False
-    )
-
-    # Question detector
-    embed.add_field(
-        name="❓ Yes/No Questions",
-        value="If a message starts with words like `is`, `do`, `will`, etc. and ends with `?`, I reply with a 'NO' goose GIF.",
-        inline=False
-    )
-
-    embed.set_footer(text="Trigger words are case-insensitive.")
-    await ctx.send(embed=embed)
 
 bot.run(os.environ["DISCORD_BOT_TOKEN"])
