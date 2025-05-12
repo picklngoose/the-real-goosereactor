@@ -7,7 +7,7 @@ import aiohttp
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
 TRIGGER_WORDS = {"goose", "bad", "kill", "run", "die", "honk", "hi", "sigma", "pickln", "potato", "cat"}
 
