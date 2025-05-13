@@ -37,7 +37,7 @@ async def custom_help(ctx):
     embed = discord.Embed(
         title="🩶 Goose Bot Help",
         description="This bot reacts to certain words and phrases. Here's what it can do:",
-        color=discord.Color.orange()
+        color=discord.Color.green()
     )
 
     # Emoji Reactions
