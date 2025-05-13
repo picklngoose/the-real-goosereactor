@@ -57,14 +57,24 @@ async def custom_help(ctx):
     embed.set_footer(text="Trigger words are case-insensitive.")
     await ctx.send(embed=embed)
     
-TRIGGER_WORDS = {"goose", "bad", "kill", "run", "die", "honk", "hi", "sigma", "pickln", "potato", "cat"}
+TRIGGER_WORDS = {"goose", "bad", "kill", "run", "die", "honk", "hi", "sigma", "pickln", "potato", "cat", "gun", "shoot", "murder", "shoe", "nike", "smoke", "chill", "honk", "yap", "pickln"}
 
 # Map specific trigger words to emoji names
 WORD_EMOJI_MAP = {
     "kill": "duck_killer",
     "bad": "goose_aggressive",
     "die": "duck_killer",
-    "run": "duck_aggressive"
+    "run": "duck_aggressive",
+    "gun": "goosegun",
+    "shoot": "goosegun",
+    "murder": "goosegun",
+    "shoe": "GooseSneaks",
+    "nike": "GooseSneaks",
+    "smoke": "goose_pipe",
+    "chill": "goose_pipe",
+    "honk": "honk4",
+    "yap": "honk4",
+    "pickln": "honk4"
 }
 DEFAULT_EMOJI_NAME = "goosealert"
 
@@ -72,7 +82,11 @@ DEFAULT_EMOJI_NAME = "goosealert"
 EMOJI_IMAGES = {
     "goosealert": "https://cdn.discordapp.com/emojis/1337164459541790783.png",
     "duck_killer": "https://cdn.discordapp.com/emojis/1337164615443939430.png",
-    "goose_aggressive": "https://cdn.discordapp.com/emojis/1337164458535157914.png"
+    "goose_aggressive": "https://cdn.discordapp.com/emojis/1337164458535157914.png",
+    "GooseSneaks": "https://raw.githubusercontent.com/picklngoose/the-real-goosereactor/refs/heads/main/emojis/GooseSneaks.png",
+    "goose_pipe": "https://raw.githubusercontent.com/picklngoose/the-real-goosereactor/refs/heads/main/emojis/goose_pipe.png",
+    "goosegun": "https://raw.githubusercontent.com/picklngoose/the-real-goosereactor/refs/heads/main/emojis/goosegun.png",
+    "honk4": "https://raw.githubusercontent.com/picklngoose/the-real-goosereactor/refs/heads/main/emojis/honk4.png"
 }
 
 async def get_or_create_emoji(guild: discord.Guild, emoji_name: str) -> discord.Emoji | None:
