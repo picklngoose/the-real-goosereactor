@@ -21,10 +21,11 @@ activity_messages = [
     "Guarding the pond 🩺",
     "Flying around ✈️",
     "Looking for trouble 🙀",
-    "Murdering moose 🧫",
+    "Murdering moose 🫎",
     "Plotting world domination 🌍",
     "Inspecting shoes 👟",
-    "Listening to goose gossip 🗣️"
+    "Listening to goose gossip 🗣️",
+    "Use !help for some help 🪿"
 ]
 
 @tasks.loop(hours=1)
