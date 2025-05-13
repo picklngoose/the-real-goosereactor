@@ -2,13 +2,19 @@ name: Stop Railway Bot
 
 on:
   schedule:
-    - cron: '0 5 * * *'  
+    - cron: '0 5 * * *'  # 3:00 PM PT / 22:00 UTC
 
 jobs:
   stop:
     runs-on: ubuntu-latest
     steps:
-      - name: Stop Railway Service
-        run: npx railway down --service confident-empathy
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Stop Railway service
+        run: railway down --service confident-empathy
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
