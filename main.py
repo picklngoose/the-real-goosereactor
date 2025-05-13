@@ -1,65 +1,22 @@
 import os
+import random
+import aiohttp
 import discord
 from discord.ext import commands
-import aiohttp
 from discord import app_commands
 
 # === Discord Bot Setup ===
 intents = discord.Intents.default()
 intents.message_content = True
-
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
-@bot.command(name="help", help="Shows a list of trigger words and their effects.")
-async def custom_help(ctx):
-    embed = discord.Embed(
-        title="🪶 Goose Bot Help",
-        description="This bot reacts to certain words and phrases. Here's what it can do:",
-        color=discord.Color.orange()
-    )
+# === Trigger Words and Emoji Mapping ===
+TRIGGER_WORDS = {
+    "goose", "bad", "kill", "run", "die", "honk", "hi", "sigma",
+    "pickln", "potato", "cat", "gun", "shoot", "murder", "shoe",
+    "nike", "smoke", "chill", "yap"
+}
 
-    # Emoji reactions
-    embed.add_field(
-        name="🔁 Emoji Reactions",
-        value=(
-            "**goose** → :goosealert:\n"
-            "**bad** → :goose_aggressive:\n"
-            "**kill** → :duck_killer:\n"
-            "**run** → :duck_aggressive:\n"
-            "**die** → :duck_killer:\n"
-            "**honk**, **hi**, **sigma**, **pickln**, **potato**, **cat** → :goosealert:"
-        ),
-        inline=False
-    )
-
-    # Custom message replies
-    embed.add_field(
-        name="💬 Message Replies",
-        value=(
-            "**goose** → HONK\n"
-            "**moose** → HISS\n"
-            "**geese** → honk?\n"
-            "**llama**, **turtle**, **dog** → ?\n"
-            "**buke**, **cyber**, **sniper** → !\n"
-            "**kill the goose** → [Goose Attack GIF](https://tenor.com/view/goose-attack-gif-26985079)\n"
-            "**cat** + **goose** in same message → [Goose vs Cat GIF](https://tenor.com/view/goose-gif-14930335269575530990)"
-        ),
-        inline=False
-    )
-
-    # Question detector
-    embed.add_field(
-        name="❓ Yes/No Questions",
-        value="Goose replies with an answer",
-        inline=False
-    )
-
-    embed.set_footer(text="Trigger words are case-insensitive.")
-    await ctx.send(embed=embed)
-    
-TRIGGER_WORDS = {"goose", "bad", "kill", "run", "die", "honk", "hi", "sigma", "pickln", "potato", "cat", "gun", "shoot", "murder", "shoe", "nike", "smoke", "chill", "honk", "yap", "pickln"}
-
-# Map specific trigger words to emoji names
 WORD_EMOJI_MAP = {
     "kill": "duck_killer",
     "bad": "goose_aggressive",
@@ -76,9 +33,9 @@ WORD_EMOJI_MAP = {
     "yap": "honk4",
     "pickln": "honk4"
 }
+
 DEFAULT_EMOJI_NAME = "goosealert"
 
-# Emoji image URLs
 EMOJI_IMAGES = {
     "goosealert": "https://cdn.discordapp.com/emojis/1337164459541790783.png",
     "duck_killer": "https://cdn.discordapp.com/emojis/1337164615443939430.png",
@@ -89,26 +46,46 @@ EMOJI_IMAGES = {
     "honk4": "https://raw.githubusercontent.com/picklngoose/the-real-goosereactor/refs/heads/main/emojis/honk4.png"
 }
 
-async def get_or_create_emoji(guild: discord.Guild, emoji_name: str) -> discord.Emoji | None:
-    for emoji in guild.emojis:
-        if emoji.name == emoji_name:
-            return emoji
-
-    url = EMOJI_IMAGES.get(emoji_name)
-    if not url:
-        return None
-
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-                if resp.status == 200:
-                    image_data = await resp.read()
-                    return await guild.create_custom_emoji(name=emoji_name, image=image_data)
-    except Exception as e:
-        print(f"❌ Failed to create emoji '{emoji_name}': {e}")
-    return None
-
-import random
+# === Commands ===
+@bot.command(name="help", help="Shows a list of trigger words and their effects.")
+async def custom_help(ctx):
+    embed = discord.Embed(
+        title="🪶 Goose Bot Help",
+        description="This bot reacts to certain words and phrases. Here's what it can do:",
+        color=discord.Color.orange()
+    )
+    embed.add_field(
+        name="🔁 Emoji Reactions",
+        value=(
+            "**goose** → :goosealert:\n"
+            "**bad** → :goose_aggressive:\n"
+            "**kill** → :duck_killer:\n"
+            "**run** → :duck_aggressive:\n"
+            "**die** → :duck_killer:\n"
+            "**honk**, **hi**, **sigma**, **pickln**, **potato**, **cat** → :goosealert:"
+        ),
+        inline=False
+    )
+    embed.add_field(
+        name="💬 Message Replies",
+        value=(
+            "**goose** → HONK\n"
+            "**moose** → HISS\n"
+            "**geese** → honk?\n"
+            "**llama**, **turtle**, **dog** → ?\n"
+            "**buke**, **cyber**, **sniper** → !\n"
+            "**kill the goose** → [Goose Attack GIF](https://tenor.com/view/goose-attack-gif-26985079)\n"
+            "**cat** + **goose** → [Goose vs Cat GIF](https://tenor.com/view/goose-gif-14930335269575530990)"
+        ),
+        inline=False
+    )
+    embed.add_field(
+        name="❓ Yes/No Questions",
+        value="Goose replies with an answer",
+        inline=False
+    )
+    embed.set_footer(text="Trigger words are case-insensitive.")
+    await ctx.send(embed=embed)
 
 @bot.tree.command(name="goosefact", description="Learn a fun goose fact.")
 async def goose_fact(interaction: discord.Interaction):
@@ -130,7 +107,8 @@ async def goose_fact(interaction: discord.Interaction):
         "Geese form strong social bonds and mourn when one dies."
     ]
     await interaction.response.send_message("🪶 " + random.choice(facts))
-    
+
+# === Events ===
 @bot.event
 async def on_ready():
     print(f"✅ Bot is ready. Logged in as {bot.user}")
@@ -139,19 +117,19 @@ async def on_ready():
         print(f" - {guild.name} (ID: {guild.id})")
 
     try:
-        # Optionally remove old slash command if needed
+        # Remove old slash command "goose" if it exists
         commands = await bot.tree.fetch_commands()
         for cmd in commands:
             if cmd.name == "goose":
                 await bot.tree.remove_command(cmd.name, type=discord.AppCommandType.chat_input)
                 print(f"❌ Removed slash command: /{cmd.name}")
 
-        # Sync your new slash commands like /goosefact
+        # Sync new slash commands
         synced = await bot.tree.sync()
         print(f"🔄 Synced {len(synced)} slash commands.")
     except Exception as e:
         print(f"❌ Error syncing slash commands: {e}")
-        
+
 @bot.event
 async def on_message(message):
     if message.author.bot:
@@ -159,7 +137,7 @@ async def on_message(message):
 
     content = message.content.lower()
 
-    # Respond to yes/no questions
+    # Detect and respond to yes/no questions
     yes_no_starters = (
         "is", "are", "do", "does", "did", "will", "would", "can", "could",
         "should", "shall", "am", "was", "were", "have", "has", "had"
@@ -168,7 +146,7 @@ async def on_message(message):
         await message.channel.send("https://tenor.com/view/no-nope-denied-goose-gif-25891503")
         return
 
-    # React to trigger words
+    # React to trigger words with emojis
     for word in TRIGGER_WORDS:
         if word in content:
             emoji_name = WORD_EMOJI_MAP.get(word, DEFAULT_EMOJI_NAME)
@@ -176,24 +154,16 @@ async def on_message(message):
             if emoji:
                 await message.add_reaction(emoji)
 
-    # Specific content responses
+    # Text responses
     if "goose" in content:
         await message.channel.send("HONK")
     if "moose" in content:
         await message.channel.send("HISS")
     if "geese" in content:
         await message.channel.send("honk?")
-    if "llama" in content:
+    if any(x in content for x in ["llama", "turtle", "dog"]):
         await message.channel.send("?")
-    if "turtle" in content:
-        await message.channel.send("?")
-    if "dog" in content:
-        await message.channel.send("?")
-    if "buke" in content:
-        await message.channel.send("!")
-    if "cyber" in content:
-        await message.channel.send("!")
-    if "sniper" in content:
+    if any(x in content for x in ["buke", "cyber", "sniper"]):
         await message.channel.send("!")
     if "kill the goose" in content:
         await message.channel.send("https://tenor.com/view/goose-attack-gif-26985079")
@@ -202,4 +172,26 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+# === Emoji Creation Helper ===
+async def get_or_create_emoji(guild: discord.Guild, emoji_name: str) -> discord.Emoji | None:
+    for emoji in guild.emojis:
+        if emoji.name == emoji_name:
+            return emoji
+
+    url = EMOJI_IMAGES.get(emoji_name)
+    if not url:
+        return None
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+                if resp.status == 200:
+                    image_data = await resp.read()
+                    return await guild.create_custom_emoji(name=emoji_name, image=image_data)
+    except Exception as e:
+        print(f"❌ Failed to create emoji '{emoji_name}': {e}")
+
+    return None
+
+# === Start Bot ===
 bot.run(os.environ["DISCORD_BOT_TOKEN"])
