@@ -2,6 +2,7 @@ import os
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands
+from discord import CustomActivity
 import aiohttp
 import random
 import asyncio
@@ -18,9 +19,9 @@ activity_messages = [
     "Hissing at cats 🐱",
     "Honking loudly 🎺",
     "Guarding the pond 🩺",
-    "Flying in V formation ✈️",
+    "Flying around ✈️",
     "Looking for trouble 🙀",
-    "Running from moose 🧫",
+    "Murdering moose 🧫",
     "Plotting world domination 🌍",
     "Inspecting shoes 👟",
     "Listening to goose gossip 🗣️"
@@ -29,7 +30,7 @@ activity_messages = [
 @tasks.loop(hours=1)
 async def update_status():
     new_status = random.choice(activity_messages)
-    await bot.change_presence(activity=discord.Game(name=new_status))
+    await bot.change_presence(activity=CustomActivity(name=new_status))
 
 # === Help Command ===
 @bot.command(name="help", help="Shows a list of trigger words and their effects.")
