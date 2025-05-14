@@ -1,11 +1,11 @@
-name: Stop Railway Bot
+name: Start Railway Bot
 
 on:
   schedule:
-    - cron: '0 5 * * *'  # 10:00 PM PT / 05:00 UTC
+    - cron: '0 13 * * *'  # 6:00 AM PT / 13:00 UTC
 
 jobs:
-  stop:
+  start:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -19,7 +19,12 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
-      - name: Stop Railway Service
-        run: railway down --service the-real-goosereactor
+      - name: Debug - List Services
+        run: railway status
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Start Railway Service
+        run: railway up --service the-real-goosereactor
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
