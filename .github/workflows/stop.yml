@@ -2,7 +2,7 @@ name: Stop Railway Bot
 
 on:
   schedule:
-    - cron: '0 5 * * *'  # 3:00 PM PT / 22:00 UTC
+    - cron: '0 5 * * *'  # 10:00 PM PT / 05:00 UTC
 
 jobs:
   stop:
@@ -14,7 +14,17 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Stop Railway service
-        run: railway down --service confident-empathy
+      - name: Link to Railway Project
+        run: railway link --project 40acd9ea-89d1-4615-913c-48b3bc1262f7
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Debug - List Services
+        run: railway status
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Stop Railway Service
+        run: railway down --service the-real-goosereactor
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
