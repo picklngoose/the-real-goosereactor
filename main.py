@@ -2,7 +2,6 @@ import os
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands
-from discord import CustomActivity
 import aiohttp
 import random
 import asyncio
@@ -31,7 +30,7 @@ activity_messages = [
 @tasks.loop(hours=1)
 async def update_status():
     new_status = random.choice(activity_messages)
-    await bot.change_presence(activity=CustomActivity(name=new_status))
+    await bot.change_presence(activity=discord.CustomActivity(name=new_status))
 
 # === Help Command ===
 @bot.command(name="help", help="Shows a list of trigger words and their effects.")
@@ -56,9 +55,7 @@ async def custom_help(ctx):
         "hi / sigma / potato / cat": "goosealert"
     }
 
-    emoji_desc = "\n".join(
-        f"**{words}** → :{emoji}:" for words, emoji in emoji_reactions.items()
-    )
+    emoji_desc = "\n".join(f"**{words}** → :{emoji}:" for words, emoji in emoji_reactions.items())
     embed.add_field(name="🔁 Emoji Reactions", value=emoji_desc, inline=False)
 
     # Message Replies
@@ -75,7 +72,6 @@ async def custom_help(ctx):
     reply_desc = "\n".join(f"{k} → {v}" for k, v in message_replies.items())
     embed.add_field(name="💬 Message Replies", value=reply_desc, inline=False)
 
-    # Yes/No Questions
     embed.add_field(
         name="❓ Yes/No Questions",
         value="Goose replies with a GIF answer if your message starts like a question and ends with a `?`.",
@@ -121,7 +117,7 @@ EMOJI_IMAGES = {
     "honk4": "https://raw.githubusercontent.com/picklngoose/the-real-goosereactor/refs/heads/main/emojis/honk4.png"
 }
 
-async def get_or_create_emoji(guild: discord.Guild, emoji_name: str) -> discord.Emoji | None:
+async def get_or_create_emoji(guild: discord.Guild, emoji_name: str) -> discord.Emoji | str | None:
     for emoji in guild.emojis:
         if emoji.name == emoji_name:
             return emoji
@@ -136,8 +132,12 @@ async def get_or_create_emoji(guild: discord.Guild, emoji_name: str) -> discord.
                 if resp.status == 200:
                     image_data = await resp.read()
                     return await guild.create_custom_emoji(name=emoji_name, image=image_data)
+    except discord.Forbidden:
+        print(f"⚠️ Forbidden: Cannot create emoji '{emoji_name}' — using fallback.")
+        return "🪿"
     except Exception as e:
         print(f"❌ Failed to create emoji '{emoji_name}': {e}")
+
     return None
 
 # === /goosefact Slash Command ===
@@ -201,15 +201,21 @@ async def on_message(message):
         await message.channel.send("https://tenor.com/view/no-nope-denied-goose-gif-25891503")
         return
 
-    # Trigger Word Reactions
+    # Trigger Word Emoji Reactions
     for word in TRIGGER_WORDS:
         if word in content:
             emoji_name = WORD_EMOJI_MAP.get(word, DEFAULT_EMOJI_NAME)
             emoji = await get_or_create_emoji(message.guild, emoji_name)
-            if emoji:
-                await message.add_reaction(emoji)
 
-    # Custom Text Replies
+            try:
+                if isinstance(emoji, discord.Emoji):
+                    await message.add_reaction(emoji)
+                elif isinstance(emoji, str):
+                    await message.add_reaction(emoji)
+            except discord.HTTPException as e:
+                print(f"❌ Could not add reaction: {e}")
+
+    # Text Replies
     if "goose" in content:
         await message.channel.send("HONK")
     if "moose" in content:
