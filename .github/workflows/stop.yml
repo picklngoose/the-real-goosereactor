@@ -3,7 +3,7 @@ name: Stop Railway Bot
 on:
   schedule:
     - cron: '0 5 * * *'  # Runs daily at 05:00 UTC (10:00 PM PT)
-  workflow_dispatch:       # Enables manual trigger
+  workflow_dispatch:       # Allows manual trigger
 
 jobs:
   stop:
@@ -19,5 +19,6 @@ jobs:
         run: railway down --service the-real-goosereactor
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
 
 
