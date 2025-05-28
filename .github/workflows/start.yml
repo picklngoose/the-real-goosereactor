@@ -18,5 +18,5 @@ jobs:
       - name: Start Railway Service
         run: railway up --service the-real-goosereactor
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_PROJECT_TOKEN }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
