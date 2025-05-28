@@ -3,6 +3,7 @@ name: Start Railway Bot
 on:
   schedule:
     - cron: '0 13 * * *'  # 6:00 AM PT / 13:00 UTC
+  workflow_dispatch:
 
 jobs:
   start:
