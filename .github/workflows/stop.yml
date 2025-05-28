@@ -14,13 +14,9 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Link Railway Project
-        run: railway link --project 40acd9ea-89d1-4615-913c-48b3bc1262f7
+      - name: Stop Service
+        run: railway down --service the-real-goosereactor
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
-      - name: Stop Railway Environment
-        run: railway down
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
