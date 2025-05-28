@@ -2,8 +2,8 @@ name: Start Railway Bot
 
 on:
   schedule:
-    - cron: '0 13 * * *'
-  workflow_dispatch:
+    - cron: '0 13 * * *'  # Runs daily at 13:00 UTC (6:00 AM PT)
+  workflow_dispatch:       # Allows manual trigger
 
 jobs:
   start:
@@ -19,4 +19,5 @@ jobs:
         run: railway up --service the-real-goosereactor
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
 
