@@ -2,8 +2,8 @@ name: Start Railway Bot
 
 on:
   schedule:
-    - cron: '0 13 * * *'  # Runs daily at 13:00 UTC (6:00 AM PT)
-  workflow_dispatch:       # Allows manual trigger
+    - cron: '0 13 * * *'  # 13:00 UTC (6:00 AM PT)
+  workflow_dispatch:       # Allow manual trigger
 
 jobs:
   start:
@@ -14,6 +14,11 @@ jobs:
 
       - name: Install Railway CLI
         run: npm install -g @railway/cli
+
+      - name: Link Railway Project
+        run: railway link --project confident-empathy
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Start Railway Service
         run: railway up --service the-real-goosereactor
