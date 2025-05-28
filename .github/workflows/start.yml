@@ -2,7 +2,7 @@ name: Start Railway Bot
 
 on:
   schedule:
-    - cron: '0 13 * * *'  # 6:00 AM PT / 13:00 UTC
+    - cron: '0 13 * * *'
   workflow_dispatch:
 
 jobs:
@@ -15,7 +15,8 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Deploy Service
+      - name: Start Railway Service
         run: railway up --service the-real-goosereactor
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_PROJECT_TOKEN }}
+
