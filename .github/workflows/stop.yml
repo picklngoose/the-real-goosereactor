@@ -1,4 +1,4 @@
-name: Stop Railway Service
+name: Stop Railway Bot
 
 on:
   workflow_dispatch:
@@ -6,19 +6,17 @@ on:
 jobs:
   stop:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Stop Service on Railway
-        run: railway down --project confident-empathy --service the-real-goosereactor
+      - name: Set BOT_ACTIVE=false to stop bot
+        run: railway variables set BOT_ACTIVE=false --service the-real-goosereactor
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_PROJECT_TOKEN }}
-
 
 
 
