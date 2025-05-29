@@ -1,4 +1,11 @@
 import os
+
+if os.getenv("BOT_ACTIVE", "true").lower() != "true":
+    print("Bot is disabled. Exiting.")
+    exit()
+
+# Your regular bot code starts here
+import discord
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands
