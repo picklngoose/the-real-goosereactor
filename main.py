@@ -23,7 +23,7 @@ activity_messages = [
     "Murdering moose 🫎",
     "Plotting world domination 🌍",
     "Inspecting shoes 👟",
-    "Listening to goose gossip 🗣️",
+    "if you have me in your server, you are lucky! only 100 servers max have me!!",
     "Use !help for some help 🪿"
 ]
 
@@ -78,7 +78,7 @@ async def custom_help(ctx):
         inline=False
     )
 
-    embed.set_footer(text="Trigger words are case-insensitive. More honk, more chaos.")
+    embed.set_footer(text="If you have me in your server, you are lucky! Only 100 servers max can have a goose like me")
     await ctx.send(embed=embed)
 
 # === Triggers and Emoji Mapping ===
