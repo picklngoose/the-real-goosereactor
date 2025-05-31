@@ -23,7 +23,7 @@ activity_messages = [
     "Murdering moose 🫎",
     "Plotting world domination 🌍",
     "Inspecting shoes 👟",
-    "if you have me in your server, you are lucky! only 100 servers max have me!!"🪿,
+    "if you have me in your server, you are lucky! only 100 servers max have me!!🪿",
     "Use !help for some help 🪿",
     "Official server: https://discord.gg/8scYzHH9PN🪿"
 ]
