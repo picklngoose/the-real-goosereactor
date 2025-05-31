@@ -66,8 +66,8 @@ async def rate_bot(interaction: discord.Interaction, rating: int, message: str =
         )
 
 # === Help Command (same as before) ===
-@bot.command(name="help", help="Shows a list of trigger words and their effects.")
-async def custom_help(ctx):
+@bot.tree.command(name="help", description="Shows a list of trigger words and their effects.")
+async def help_command(interaction: discord.Interaction):
     embed = discord.Embed(
         title="🩶 Goose Bot Help",
         description="This bot reacts to certain words and phrases. Here's what it can do:",
@@ -88,11 +88,27 @@ async def custom_help(ctx):
         "**cat** + **goose**": "[Goose vs Cat GIF](https://tenor.com/view/goose-gif-14930335269575530990)"
     }
 
-    embed.add_field(name="🔁 Emoji Reactions", value="\n".join(f"**{k}** → :{v}:" for k, v in emoji_reactions.items()), inline=False)
-    embed.add_field(name="💬 Message Replies", value="\n".join(f"{k} → {v}" for k, v in reply_desc.items()), inline=False)
-    embed.add_field(name="❓ Yes/No Questions", value="Goose replies with a GIF if you ask a yes/no question ending in `?`.", inline=False)
+    embed.add_field(
+        name="🔁 Emoji Reactions",
+        value="\n".join(f"**{k}** → :{v}:" for k, v in emoji_reactions.items()),
+        inline=False
+    )
+
+    embed.add_field(
+        name="💬 Message Replies",
+        value="\n".join(f"{k} → {v}" for k, v in reply_desc.items()),
+        inline=False
+    )
+
+    embed.add_field(
+        name="❓ Yes/No Questions",
+        value="Goose replies with a GIF if you ask a yes/no question ending in `?`.",
+        inline=False
+    )
+
     embed.set_footer(text="Rate me using /rate or join the official server: https://discord.gg/8scYzHH9PN")
-    await ctx.send(embed=embed)
+    
+    await interaction.response.send_message(embed=embed)
 
 # === Emoji Trigger System ===
 TRIGGER_WORDS = {"goose", "bad", "kill", "run", "die", "honk", "hi", "sigma", "pickln", "potato", "cat", "gun", "shoot", "murder", "shoe", "nike", "smoke", "chill", "yap"}
