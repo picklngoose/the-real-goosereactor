@@ -33,7 +33,39 @@ async def update_status():
     new_status = random.choice(activity_messages)
     await bot.change_presence(activity=discord.CustomActivity(name=new_status))
 
-# === Help Command ===
+# === In-Memory Feedback Storage ===
+user_feedback = []
+
+# === /rate Slash Command ===
+@bot.tree.command(name="rate", description="Rate Goose Bot and give feedback!")
+@app_commands.describe(rating="Your rating from 1 to 5", message="Your feedback about Goose Bot")
+async def rate_bot(interaction: discord.Interaction, rating: int, message: str = "No feedback provided."):
+    if not 1 <= rating <= 5:
+        await interaction.response.send_message("❌ Please give a rating from 1 to 5.", ephemeral=True)
+        return
+
+    entry = {
+        "user": str(interaction.user),
+        "user_id": interaction.user.id,
+        "rating": rating,
+        "message": message
+    }
+
+    user_feedback.append(entry)
+
+    await interaction.response.send_message(f"🪿 Thanks for rating Goose Bot **{rating}/5**!", ephemeral=True)
+
+    # Optional: log feedback to a channel
+    log_channel_id = 123456789012345678  # Replace this with your feedback log channel ID
+    log_channel = bot.get_channel(log_channel_id)
+    if log_channel:
+        await log_channel.send(
+            f"📝 New Feedback from **{interaction.user.mention}**:\n"
+            f"⭐ Rating: **{rating}/5**\n"
+            f"💬 Message: {message}"
+        )
+
+# === Help Command (same as before) ===
 @bot.command(name="help", help="Shows a list of trigger words and their effects.")
 async def custom_help(ctx):
     embed = discord.Embed(
@@ -42,68 +74,34 @@ async def custom_help(ctx):
         color=discord.Color.green()
     )
 
-    # Emoji Reactions
     emoji_reactions = {
-        "goose": "goosealert",
-        "bad": "goose_aggressive",
-        "kill": "duck_killer",
-        "run": "duck_aggressive",
-        "die": "duck_killer",
-        "gun / shoot / murder": "goosegun",
-        "shoe / nike": "GooseSneaks",
-        "smoke / chill": "goose_pipe",
-        "honk / pickln / yap": "honk4",
-        "hi / sigma / potato / cat": "goosealert"
+        "goose": "goosealert", "bad": "goose_aggressive", "kill": "duck_killer",
+        "run": "duck_aggressive", "die": "duck_killer", "gun / shoot / murder": "goosegun",
+        "shoe / nike": "GooseSneaks", "smoke / chill": "goose_pipe",
+        "honk / pickln / yap": "honk4", "hi / sigma / potato / cat": "goosealert"
     }
 
-    emoji_desc = "\n".join(f"**{words}** → :{emoji}:" for words, emoji in emoji_reactions.items())
-    embed.add_field(name="🔁 Emoji Reactions", value=emoji_desc, inline=False)
-
-    # Message Replies
-    message_replies = {
-        "**goose**": "HONK",
-        "**moose**": "HISS",
-        "**geese**": "honk?",
-        "**llama**, **turtle**, **dog**": "?",
-        "**buke**, **cyber**, **sniper**": "!",
+    reply_desc = {
+        "**goose**": "HONK", "**moose**": "HISS", "**geese**": "honk?",
+        "**llama**, **turtle**, **dog**": "?", "**buke**, **cyber**, **sniper**": "!",
         "**kill the goose**": "[Goose Attack GIF](https://tenor.com/view/goose-attack-gif-26985079)",
         "**cat** + **goose**": "[Goose vs Cat GIF](https://tenor.com/view/goose-gif-14930335269575530990)"
     }
 
-    reply_desc = "\n".join(f"{k} → {v}" for k, v in message_replies.items())
-    embed.add_field(name="💬 Message Replies", value=reply_desc, inline=False)
-
-    embed.add_field(
-        name="❓ Yes/No Questions",
-        value="Goose replies with a GIF answer if your message starts like a question and ends with a `?`.",
-        inline=False
-    )
-
-    embed.set_footer(text="If you have me in your server, you are lucky! Only 100 servers max can have a goose like me! Official server: https://discord.gg/8scYzHH9PN")
+    embed.add_field(name="🔁 Emoji Reactions", value="\n".join(f"**{k}** → :{v}:" for k, v in emoji_reactions.items()), inline=False)
+    embed.add_field(name="💬 Message Replies", value="\n".join(f"{k} → {v}" for k, v in reply_desc.items()), inline=False)
+    embed.add_field(name="❓ Yes/No Questions", value="Goose replies with a GIF if you ask a yes/no question ending in `?`.", inline=False)
+    embed.set_footer(text="Rate me using /rate or join the official server: https://discord.gg/8scYzHH9PN")
     await ctx.send(embed=embed)
 
-# === Triggers and Emoji Mapping ===
-TRIGGER_WORDS = {
-    "goose", "bad", "kill", "run", "die", "honk", "hi", "sigma", "pickln",
-    "potato", "cat", "gun", "shoot", "murder", "shoe", "nike", "smoke", "chill",
-    "yap"
-}
+# === Emoji Trigger System ===
+TRIGGER_WORDS = {"goose", "bad", "kill", "run", "die", "honk", "hi", "sigma", "pickln", "potato", "cat", "gun", "shoot", "murder", "shoe", "nike", "smoke", "chill", "yap"}
 
 WORD_EMOJI_MAP = {
-    "kill": "duck_killer",
-    "bad": "goose_aggressive",
-    "die": "duck_killer",
-    "run": "duck_aggressive",
-    "gun": "goosegun",
-    "shoot": "goosegun",
-    "murder": "goosegun",
-    "shoe": "GooseSneaks",
-    "nike": "GooseSneaks",
-    "smoke": "goose_pipe",
-    "chill": "goose_pipe",
-    "honk": "honk4",
-    "yap": "honk4",
-    "pickln": "honk4"
+    "kill": "duck_killer", "bad": "goose_aggressive", "die": "duck_killer", "run": "duck_aggressive",
+    "gun": "goosegun", "shoot": "goosegun", "murder": "goosegun", "shoe": "GooseSneaks",
+    "nike": "GooseSneaks", "smoke": "goose_pipe", "chill": "goose_pipe",
+    "honk": "honk4", "yap": "honk4", "pickln": "honk4"
 }
 
 DEFAULT_EMOJI_NAME = "goosealert"
@@ -134,10 +132,10 @@ async def get_or_create_emoji(guild: discord.Guild, emoji_name: str) -> discord.
                     image_data = await resp.read()
                     return await guild.create_custom_emoji(name=emoji_name, image=image_data)
     except discord.Forbidden:
-        print(f"⚠️ Forbidden: Cannot create emoji '{emoji_name}' — using fallback.")
+        print(f"⚠️ Cannot create emoji '{emoji_name}'. Permission denied.")
         return "🪿"
     except Exception as e:
-        print(f"❌ Failed to create emoji '{emoji_name}': {e}")
+        print(f"❌ Error creating emoji '{emoji_name}': {e}")
 
     return None
 
@@ -172,12 +170,6 @@ async def on_ready():
         print(f" - {guild.name} (ID: {guild.id})")
 
     try:
-        commands = await bot.tree.fetch_commands()
-        for cmd in commands:
-            if cmd.name == "goose":
-                await bot.tree.remove_command(cmd.name, type=discord.AppCommandType.chat_input)
-                print(f"❌ Removed slash command: /{cmd.name}")
-
         synced = await bot.tree.sync()
         print(f"🔄 Synced {len(synced)} slash commands.")
     except Exception as e:
@@ -193,7 +185,6 @@ async def on_message(message):
 
     content = message.content.lower()
 
-    # Yes/No Question Detection
     yes_no_starters = (
         "is", "are", "do", "does", "did", "will", "would", "can", "could",
         "should", "shall", "am", "was", "were", "have", "has", "had"
@@ -202,7 +193,6 @@ async def on_message(message):
         await message.channel.send("https://tenor.com/view/no-nope-denied-goose-gif-25891503")
         return
 
-    # Trigger Word Emoji Reactions
     for word in TRIGGER_WORDS:
         if word in content:
             emoji_name = WORD_EMOJI_MAP.get(word, DEFAULT_EMOJI_NAME)
@@ -216,7 +206,6 @@ async def on_message(message):
             except discord.HTTPException as e:
                 print(f"❌ Could not add reaction: {e}")
 
-    # Text Replies
     if "goose" in content:
         await message.channel.send("HONK")
     if "moose" in content:
@@ -236,3 +225,4 @@ async def on_message(message):
 
 # === Run Bot ===
 bot.run(os.environ["DISCORD_BOT_TOKEN"])
+
