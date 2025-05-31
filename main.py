@@ -167,7 +167,7 @@ async def goose_fact(interaction: discord.Interaction):
         "Geese can remember people — friend or foe!",
         "Some geese can fly over 5,000 miles during migration!",
         "The Canada goose is one of the most widespread species in North America.",
-        "Baby geese are called goslings 👧.",
+        "Baby geese are called goslings.",
         "Geese can live 10–25 years in the wild.",
         "Geese honk to communicate while flying to keep the group together.",
         "Geese can be trained — they’re very smart animals!",
