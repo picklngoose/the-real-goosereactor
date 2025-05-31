@@ -23,8 +23,9 @@ activity_messages = [
     "Murdering moose 🫎",
     "Plotting world domination 🌍",
     "Inspecting shoes 👟",
-    "if you have me in your server, you are lucky! only 100 servers max have me!!",
-    "Use !help for some help 🪿"
+    "if you have me in your server, you are lucky! only 100 servers max have me!!"🪿,
+    "Use !help for some help 🪿",
+    "Official server: https://discord.gg/8scYzHH9PN🪿"
 ]
 
 @tasks.loop(hours=1)
@@ -78,7 +79,7 @@ async def custom_help(ctx):
         inline=False
     )
 
-    embed.set_footer(text="If you have me in your server, you are lucky! Only 100 servers max can have a goose like me")
+    embed.set_footer(text="If you have me in your server, you are lucky! Only 100 servers max can have a goose like me! Official server: https://discord.gg/8scYzHH9PN")
     await ctx.send(embed=embed)
 
 # === Triggers and Emoji Mapping ===
