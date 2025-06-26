@@ -240,5 +240,24 @@ async def on_message(message):
     await bot.process_commands(message)
 
 # === Run Bot ===
-bot.run(os.environ["DISCORD_BOT_TOKEN"])
+from aiohttp import web
+
+async def web_handler(request):
+    return web.Response(text="Goose Bot is alive! 🪿")
+
+async def run_webserver():
+    app = web.Application()
+    app.add_routes([web.get("/", web_handler)])
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "0.0.0.0", 3000)
+    await site.start()
+
+async def main():
+    await asyncio.gather(
+        bot.start(os.environ["DISCORD_BOT_TOKEN"]),
+        run_webserver()
+    )
+
+asyncio.run(main())
 
