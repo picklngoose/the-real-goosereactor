@@ -250,7 +250,9 @@ async def run_webserver():
     app.add_routes([web.get("/", web_handler)])
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, "0.0.0.0", 3000)
+
+    port = int(os.environ.get("PORT", 3000))  # Default to 3000 if not set
+    site = web.TCPSite(runner, "0.0.0.0", port)
     await site.start()
 
 async def main():
